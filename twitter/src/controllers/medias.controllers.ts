@@ -44,9 +44,9 @@ export const serveVideoStreamController = (req: Request, res: Response, next: Ne
   // Get start byte from header range
   const start = Number(range.replace(/\D/g, ''))
   // Get end byte from header range, if greater than video size, get video size
-  const end = Math.min(start + chunkSize, videoSize)
+  const end = Math.min(start + chunkSize, videoSize - 1)
   // The actual file size for each video stream
-  const contentLength = end - start
+  const contentLength = end - start + 1
   const contentType = mime.getType(videoPath) || 'video/*'
   const headers = {
     'Content-Range': `bytes ${start}-${end}/${videoSize}`,
