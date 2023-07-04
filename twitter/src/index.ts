@@ -8,7 +8,9 @@ import { config } from 'dotenv'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRouter from './routes/static.routes'
 config()
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexUsers()
+})
 const app = express()
 const port = process.env.PORT
 
