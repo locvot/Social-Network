@@ -3,6 +3,7 @@ import { config } from 'dotenv'
 import User from '../models/schemas/User.schema'
 import RefreshToken from '~/models/schemas/RefreshToeken.schema'
 import Follower from '~/models/schemas/Follower.schema'
+import Tweet from '~/models/schemas/Tweet.schema'
 config()
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@twitter-dev.vxdvzen.mongodb.net/?retryWrites=true&w=majority`
@@ -56,6 +57,10 @@ class DatabaseService {
     if (!exists) {
       this.followers.createIndex({ user_id: 1, followed_user_id: 1 })
     }
+  }
+
+  get tweets(): Collection<Tweet> {
+    return this.db.collection(process.env.DB_TWEETS_COLLECTION as string)
   }
 
   get users(): Collection<User> {
