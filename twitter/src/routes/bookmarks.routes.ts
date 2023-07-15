@@ -1,24 +1,19 @@
 import { Router } from 'express'
+import { bookmarkTweetController } from '~/controllers/bookmarks.controllers'
 import { createTweetController } from '~/controllers/tweets.controllers'
 import { createTweetValidator } from '~/middlewares/tweets.middlewares'
 import { accessTokenValidator, verifiedUserValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 
-const tweetsRouter = Router()
+const bookmarksRouter = Router()
 
 /**
- * Description: Create tweet
+ * Description: Bookmark
  * Path: /
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Body: TweetRequestBody
+ * Body: { tweet_id : string }
  */
-tweetsRouter.post(
-  '/',
-  accessTokenValidator,
-  verifiedUserValidator,
-  createTweetValidator,
-  wrapRequestHandler(createTweetController)
-)
+bookmarksRouter.post('/', accessTokenValidator, verifiedUserValidator, wrapRequestHandler(bookmarkTweetController))
 
-export default tweetsRouter
+export default bookmarksRouter
