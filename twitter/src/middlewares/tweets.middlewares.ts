@@ -129,7 +129,7 @@ export const tweetIdValidator = validate(
               .aggregate<Tweet>([
                 {
                   $match: {
-                    _id: new ObjectId('64c5f0164e47d8f169a07f00')
+                    _id: new ObjectId(value)
                   }
                 },
                 {
@@ -228,9 +228,6 @@ export const tweetIdValidator = validate(
                           }
                         }
                       }
-                    },
-                    views: {
-                      $add: ['$user_views', '$guest_views']
                     }
                   }
                 },
@@ -241,7 +238,6 @@ export const tweetIdValidator = validate(
                 }
               ])
               .toArray()
-            console.log(tweet)
             if (!tweet) {
               throw new ErrorWithStatus({
                 status: HTTP_STATUS.NOT_FOUND,
