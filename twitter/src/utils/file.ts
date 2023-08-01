@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { File } from 'formidable'
 import fs from 'fs'
-import { get } from 'lodash'
 import { UPLOAD_IMAGE_TEMP_DIR, UPLOAD_VIDEO_DIR, UPLOAD_VIDEO_TEMP_DIR } from '~/constants/dir'
 
 export const initFolder = () => {
