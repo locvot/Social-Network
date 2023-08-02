@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { TweetType } from '~/constants/enum'
+import { TWEETS_MESSAGES } from '~/constants/messages'
 import { Pagination, TweetParam, TweetQuery, TweetRequestBody } from '~/models/requests/Tweet.request'
 import { TokenPayload } from '~/models/requests/User.request'
 import tweetsService from '~/services/tweets.services'
@@ -9,7 +10,7 @@ export const createTweetController = async (req: Request<ParamsDictionary, any, 
   const { user_id } = req.decoded_authorization as TokenPayload
   const result = await tweetsService.createTweet(user_id, req.body)
   return res.json({
-    message: 'Create Tweet Successfully',
+    message: TWEETS_MESSAGES.CREATE_TWEET_SUCCESSFULLY,
     result
   })
 }
@@ -23,7 +24,7 @@ export const getTweetController = async (req: Request, res: Response) => {
     updated_at: result.updated_at
   }
   return res.json({
-    message: 'Get Tweet Successfully',
+    message: TWEETS_MESSAGES.GET_TWEET_SUCCESSFULLY,
     result: tweet
   })
 }
@@ -41,7 +42,7 @@ export const getTweetChildrenController = async (req: Request<TweetParam, any, a
     user_id
   })
   return res.json({
-    message: 'Get Tweet Children Successfully',
+    message: TWEETS_MESSAGES.GET_TWEET_CHILDREN_SUCCESSFULLY,
     result: {
       tweets,
       tweet_type,
@@ -62,7 +63,12 @@ export const getNewFeedsController = async (req: Request<ParamsDictionary, any, 
     page
   })
   return res.json({
-    message: 'Get New Feeds Successfully',
-    result
+    message: TWEETS_MESSAGES.GET_NEW_FEEDS_SUCCESSFULLY,
+    result: {
+      tweets: result.tweets,
+      limit,
+      page,
+      total_page: Math.ceil(result.total / limit)
+    }
   })
 }

@@ -81,7 +81,11 @@ export const TWEETS_MESSAGES = {
   TWEET_NOT_FOUND: 'Tweet not found',
   TWEET_IS_NOT_PUBLIC: 'Tweet is not public',
   LIMIT_MUST_BE_LESS_THAN_100_AND_GREATER_THAN_1: 'Limit must be less than 100 and greater than 1',
-  PAGE_MUST_BE_GREATER_THAN_0: 'Page must be greater than 0'
+  PAGE_MUST_BE_GREATER_THAN_0: 'Page must be greater than 0',
+  CREATE_TWEET_SUCCESSFULLY: 'Create tweet successfully',
+  GET_TWEET_SUCCESSFULLY: 'Get tweet successfully',
+  GET_TWEET_CHILDREN_SUCCESSFULLY: 'Get tweet children successfully',
+  GET_NEW_FEEDS_SUCCESSFULLY: 'Get new feeds successfully'
 } as const
 
 export const BOOKMARKS_MESSAGES = {
