@@ -99,5 +99,8 @@ export const LIKES_MESSAGES = {
 }
 
 export const SEARCH_MESSAGES = {
-  SEARCH_TWEETS_SUCCESSFULLY: 'Search tweets successfully'
+  SEARCH_TWEETS_SUCCESSFULLY: 'Search tweets successfully',
+  CONTENT_MUST_BE_STRING: 'Content must be string',
+  MEDIA_TYPE_MUST_BE_IMAGE_OR_VIDEO: 'Media type must be image or video',
+  PEOPLE_FOLLOW_MUST_BE_0_OR_1: 'People follow must be 0 or 1'
 }
