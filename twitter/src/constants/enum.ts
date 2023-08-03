@@ -13,7 +13,13 @@ export enum TokenType {
 
 export enum MediaType {
   Image,
-  Video
+  Video,
+  HLS
+}
+
+export enum MediaTypeQuery {
+  Image = 'image',
+  Video = 'video'
 }
 
 export enum TweetType {
