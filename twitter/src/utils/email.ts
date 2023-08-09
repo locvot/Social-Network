@@ -2,6 +2,8 @@
 /* eslint-disable no-undef */
 import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
 import { config } from 'dotenv'
+import fs from 'fs'
+import path from 'path'
 
 config()
 // Create SES service object.
@@ -12,6 +14,7 @@ const sesClient = new SESClient({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
   }
 })
+const verifyEmailTemplate = fs.readFileSync(path.resolve('src/templates/verify-email.html'), 'utf8')
 
 const createSendEmailCommand = ({
   fromAddress,
@@ -53,7 +56,7 @@ const createSendEmailCommand = ({
   })
 }
 
-export const sendVerifyEmail = (toAddress: string, subject: string, body: string) => {
+const sendVerifyEmail = (toAddress: string, subject: string, body: string) => {
   const sendEmailCommand = createSendEmailCommand({
     fromAddress: process.env.SES_FROM_ADDRESS as string,
     toAddresses: toAddress,
@@ -64,4 +67,34 @@ export const sendVerifyEmail = (toAddress: string, subject: string, body: string
   return sesClient.send(sendEmailCommand)
 }
 
-sendVerifyEmail('duthanhduoc01@gmail.com', 'Tiêu đề email', '<h1>Nội dung email</h1>')
+export const sendVerifyRegisterEmail = (
+  toAddress: string,
+  email_verify_token: string,
+  template: string = verifyEmailTemplate
+) => {
+  return sendVerifyEmail(
+    toAddress,
+    'Verify your email',
+    template
+      .replace('{{title}}', 'Please verify your email')
+      .replace('{{content}}', 'Click the button below to verify your email')
+      .replace('{{titleLink}}', 'Verify')
+      .replace('{{link}}', `${process.env.CLIENT_URL}/verify-email?token=${email_verify_token}`)
+  )
+}
+
+export const sendForgotPasswordEmail = (
+  toAddress: string,
+  forgot_password_token: string,
+  template: string = verifyEmailTemplate
+) => {
+  return sendVerifyEmail(
+    toAddress,
+    'Forgot Password',
+    template
+      .replace('{{title}}', 'You have requested to reset your password')
+      .replace('{{content}}', 'Click the button below to reset your password')
+      .replace('{{titleLink}}', 'Reset Password')
+      .replace('{{link}}', `${process.env.CLIENT_URL}/reset-password?token=${forgot_password_token}`)
+  )
+}
