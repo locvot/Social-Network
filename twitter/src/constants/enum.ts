@@ -17,6 +17,13 @@ export enum MediaType {
   HLS
 }
 
+export enum EncodingStatus {
+  Pending, // Waiting for encoding
+  Processing, // Encoding
+  Success, // Encoded
+  Failed // Failed to encode
+}
+
 export enum MediaTypeQuery {
   Image = 'image',
   Video = 'video'
