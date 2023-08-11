@@ -11,6 +11,7 @@ import tweetsRouter from './routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
+import cors from 'cors'
 // import '~/utils/fake'
 config()
 databaseService.connect().then(() => {
@@ -20,6 +21,7 @@ databaseService.connect().then(() => {
   databaseService.indexTweets()
 })
 const app = express()
+app.use(cors())
 const port = process.env.PORT
 
 initFolder()
