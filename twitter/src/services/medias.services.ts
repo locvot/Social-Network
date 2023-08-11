@@ -12,6 +12,41 @@ import { Media } from '~/models/Others'
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
 config()
 
+class Queue {
+  items: string[]
+  encoding: boolean
+  constructor() {
+    this.items = []
+    this.encoding = false
+  }
+  enqueue(item: string) {
+    this.items.push(item)
+    this.processEncode()
+  }
+  async processEncode() {
+    if (this.encoding) return
+    if (this.items.length > 0) {
+      this.encoding = true
+      const videoPath = this.items[0]
+      try {
+        await encodeHLSWithMultipleVideoStreams(videoPath)
+        this.items.shift()
+        await fsPromise.unlink(videoPath)
+        console.log(`Encode video ${videoPath} success`)
+      } catch (error) {
+        console.log(`Encode video ${videoPath} failed`)
+        console.log(error)
+      }
+      this.encoding = false
+      this.processEncode()
+    } else {
+      console.log('Encode queue is empty')
+    }
+  }
+}
+
+const queue = new Queue()
+
 class MediasService {
   async uploadImage(req: Request) {
     const files = await handleUploadImage(req)
@@ -49,9 +84,8 @@ class MediasService {
     const files = await handleUploadVideo(req)
     const result: Media[] = await Promise.all(
       files.map(async (file) => {
-        await encodeHLSWithMultipleVideoStreams(file.filepath)
         const newName = getNameFromFullName(file.newFilename)
-        await fsPromise.unlink(file.filepath)
+        queue.enqueue(file.filepath)
         return {
           url: isProduction
             ? `${process.env.HOST}/static/video-hls/${newName}.m3u8`
