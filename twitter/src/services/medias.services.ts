@@ -12,6 +12,9 @@ import { Media } from '~/models/Others'
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
 import databaseService from './database.services'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
+import { uploadFileToS3 } from '~/utils/s3'
+import mime from 'mime'
+import { CompleteMultipartUploadCommandOutput } from '@aws-sdk/client-s3/dist-types/commands/CompleteMultipartUploadCommand'
 config()
 
 class Queue {
@@ -108,15 +111,25 @@ class MediasService {
     const result: Media[] = await Promise.all(
       files.map(async (file) => {
         const newName = getNameFromFullName(file.newFilename)
-        const newPath = path.resolve(UPLOAD_IMAGE_DIR, `${newName}.jpg`)
+        const newFullFileName = `${newName}.jpg`
+        const newPath = path.resolve(UPLOAD_IMAGE_DIR, newFullFileName)
         await sharp(file.filepath).jpeg({ quality: 80 }).toFile(newPath)
-        fs.unlinkSync(file.filepath)
+        const s3Reulst = await uploadFileToS3({
+          filename: newFullFileName,
+          filepath: newPath,
+          contentType: mime.getType(newPath) as string
+        })
+        await Promise.all([fsPromise.unlink(file.filepath), fsPromise.unlink(newPath)])
         return {
-          url: isProduction
-            ? `${process.env.HOST}/static/image/${newName}.jpg`
-            : `http://localhost:${process.env.PORT}/static/image/${newName}.jpg`,
+          url: (s3Reulst as CompleteMultipartUploadCommandOutput).Location as string,
           type: MediaType.Image
         }
+        // return {
+        //   url: isProduction
+        //     ? `${process.env.HOST}/static/image/${newFullFileName}`
+        //     : `http://localhost:${process.env.PORT}/static/image/${newFullFileName}`,
+        //   type: MediaType.Image
+        // }
       })
     )
     return result
