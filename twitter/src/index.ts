@@ -13,20 +13,33 @@ import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
 import cors from 'cors'
 import './utils/s3'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 // import '~/utils/fake'
 config()
+
+// Connect to database
 databaseService.connect().then(() => {
   databaseService.indexUsers()
   databaseService.indexRefreshTokens()
   databaseService.indexFollowers()
   databaseService.indexTweets()
 })
+
 const app = express()
+const httpServer = createServer()
+
+// Enable CORS
 app.use(cors())
+
 const port = process.env.PORT
 
+// Initialize folder
 initFolder()
+
 app.use(express.json())
+
+// Define Routes
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/tweets', tweetsRouter)
@@ -35,7 +48,23 @@ app.use('/likes', likesRouter)
 app.use('/static', staticRouter)
 app.use('/search', searchRouter)
 app.use('/static', express.static(UPLOAD_VIDEO_DIR))
+
+// Error handler
 app.use(defaultErrorHandler)
-app.listen(port, () => {
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*'
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log(`user ${socket.id} connected`)
+  socket.on('disconnect', () => {
+    console.log(`user ${socket.id} disconnected`)
+  })
+})
+
+httpServer.listen(port, () => {
   console.log(`Server running on port ${port}`)
 })
