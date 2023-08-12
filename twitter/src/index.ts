@@ -12,6 +12,7 @@ import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
 import cors from 'cors'
+import './utils/s3'
 // import '~/utils/fake'
 config()
 databaseService.connect().then(() => {
