@@ -114,14 +114,15 @@ class MediasService {
         const newFullFileName = `${newName}.jpg`
         const newPath = path.resolve(UPLOAD_IMAGE_DIR, newFullFileName)
         await sharp(file.filepath).jpeg({ quality: 80 }).toFile(newPath)
-        const s3Reulst = await uploadFileToS3({
-          filename: newFullFileName,
+        const s3Result = await uploadFileToS3({
+          filename: 'images/' + newFullFileName,
           filepath: newPath,
           contentType: mime.getType(newPath) as string
         })
+        console.log(s3Result)
         await Promise.all([fsPromise.unlink(file.filepath), fsPromise.unlink(newPath)])
         return {
-          url: (s3Reulst as CompleteMultipartUploadCommandOutput).Location as string,
+          url: (s3Result as CompleteMultipartUploadCommandOutput).Location as string,
           type: MediaType.Image
         }
         // return {
@@ -137,14 +138,27 @@ class MediasService {
 
   async uploadVideo(req: Request) {
     const files = await handleUploadVideo(req)
-    const result: Media[] = files.map((file) => {
-      return {
-        url: isProduction
-          ? `${process.env.HOST}/static/video/${file.newFilename}`
-          : `http://localhost:${process.env.PORT}/static/video/${file.newFilename}`,
-        type: MediaType.Video
-      }
-    })
+
+    const result: Media[] = await Promise.all(
+      files.map(async (file) => {
+        const s3Result = await uploadFileToS3({
+          filename: 'videos/' + file.newFilename,
+          contentType: mime.getType(file.filepath) as string,
+          filepath: file.filepath
+        })
+        fsPromise.unlink(file.filepath)
+        return {
+          url: (s3Result as CompleteMultipartUploadCommandOutput).Location as string,
+          type: MediaType.Video
+        }
+        // return {
+        //   url: isProduction
+        //     ? `${process.env.HOST}/static/video/${file.newFilename}`
+        //     : `http://localhost:${process.env.PORT}/static/video/${file.newFilename}`,
+        //   type: MediaType.Video
+        // }
+      })
+    )
     return result
   }
 

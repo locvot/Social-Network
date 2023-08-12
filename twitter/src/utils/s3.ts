@@ -2,7 +2,6 @@ import { S3 } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
 import fs from 'fs'
 import { config } from 'dotenv'
-import path from 'path'
 config()
 
 const s3 = new S3({
@@ -24,7 +23,13 @@ export const uploadFileToS3 = ({
 }) => {
   const parallelUploads3 = new Upload({
     client: s3,
-    params: { Bucket: 'twitter-clone-6921', Key: filename, Body: fs.readFileSync(filepath), ContentType: contentType },
+    params: {
+      Bucket: 'twitter-clone-6921',
+      Key: filename,
+      Body: fs.readFileSync(filepath),
+      ContentType: contentType,
+      ContentDisposition: 'inline'
+    },
     tags: [
       /*...*/
     ], // optional tags
