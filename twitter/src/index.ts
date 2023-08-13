@@ -27,7 +27,7 @@ databaseService.connect().then(() => {
 })
 
 const app = express()
-const httpServer = createServer()
+const httpServer = createServer(app)
 
 // Enable CORS
 app.use(cors())
@@ -58,16 +58,30 @@ const io = new Server(httpServer, {
   }
 })
 
+const users: {
+  [key: string]: {
+    socket_id: string
+  }
+} = {}
+
 io.on('connection', (socket) => {
   console.log(`user ${socket.id} connected`)
+  const user_id = socket.handshake.auth._id
+  users[user_id] = {
+    socket_id: socket.id
+  }
+  console.log(users)
+  socket.on('private message', (data) => {
+    const receiver_socket_id = users[data.to].socket_id
+    socket.to(receiver_socket_id).emit('receive private message', {
+      content: data.content,
+      from: user_id
+    })
+  })
   socket.on('disconnect', () => {
+    delete users[user_id]
     console.log(`user ${socket.id} disconnected`)
-  })
-  socket.on('hello', (agr) => {
-    console.log(agr)
-  })
-  socket.emit('hi', {
-    message: `Hello ${socket.id}`
+    console.log(users)
   })
 })
 
