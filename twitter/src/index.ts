@@ -16,6 +16,8 @@ import './utils/s3'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import Conversation from './models/schemas/Conversation.schema'
+import conversationsRouter from './routes/conversations.routes'
+import { ObjectId } from 'mongodb'
 // import '~/utils/fake'
 config()
 
@@ -48,6 +50,7 @@ app.use('/bookmarks', bookmarksRouter)
 app.use('/likes', likesRouter)
 app.use('/static', staticRouter)
 app.use('/search', searchRouter)
+app.use('/conversations', conversationsRouter)
 app.use('/static', express.static(UPLOAD_VIDEO_DIR))
 
 // Error handler
@@ -77,8 +80,8 @@ io.on('connection', (socket) => {
     if (!receiver_socket_id) return
     await databaseService.conversations.insertOne(
       new Conversation({
-        sender_id: data.from,
-        receiver_id: data.to,
+        sender_id: new ObjectId(data.from),
+        receiver_id: new ObjectId(data.to),
         content: data.content
       })
     )
