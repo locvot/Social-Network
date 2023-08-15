@@ -35,10 +35,6 @@ export default function Chat() {
     })
   }
   useEffect(() => {
-    socket.auth = {
-      Authorization: `Bearer ${localStorage.getItem('access_token')}`
-    }
-    socket.connect()
     socket.on("receive_message", data => {
       const {payload} = data
       setConversations(conversations => [

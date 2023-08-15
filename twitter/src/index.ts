@@ -76,7 +76,6 @@ const users: {
 
 io.use(async (socket, next) => {
   const { Authorization } = socket.handshake.auth
-  console.log(Authorization)
   const access_token = Authorization?.split(' ')[1]
   try {
     const decoded_authorization = await verifyAccessToken(access_token)
@@ -105,6 +104,7 @@ io.on('connection', (socket) => {
   users[user_id] = {
     socket_id: socket.id
   }
+  console.log(users)
   socket.on('send_message', async (data) => {
     const { receiver_id, sender_id, content } = data.payload
     const receiver_socket_id = users[receiver_id]?.socket_id
