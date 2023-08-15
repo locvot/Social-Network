@@ -36,7 +36,7 @@ export default function Chat() {
   }
   useEffect(() => {
     socket.auth = {
-      _id: profile._id,
+      Authorization: `Bearer ${localStorage.getItem('access_token')}`
     }
     socket.connect()
     socket.on("receive_message", data => {
@@ -45,6 +45,9 @@ export default function Chat() {
         ...conversations, 
         payload
     ])
+    })
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
     })
     return () => {
       socket.disconnect()
