@@ -42,9 +42,15 @@ export default function Chat() {
         payload
     ])
     })
+
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
     })
+
+    socket.on("disconnect", (reason) => {
+      console.log(`disconnect due to ${reason}`);
+    })
+
     return () => {
       socket.disconnect()
     }
