@@ -10,14 +10,15 @@ import tweetsRouter from './routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
-import cors from 'cors'
+import cors, { CorsOptions } from 'cors'
 import './utils/s3'
 import { createServer } from 'http'
 import conversationsRouter from './routes/conversations.routes'
 import initSocket from './utils/socket'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
-import { envConfig } from './constants/config'
+import { envConfig, isProduction } from './constants/config'
+import helmet from 'helmet'
 // import '~/utils/fake'
 
 const options: swaggerJSDoc.Options = {
@@ -45,7 +46,13 @@ const app = express()
 const httpServer = createServer(app)
 
 // Enable CORS
-app.use(cors())
+const CorsOptions: CorsOptions = {
+  origin: isProduction ? envConfig.clientUrl : '*'
+}
+app.use(cors(CorsOptions))
+
+// Enable helmet
+app.use(helmet())
 
 const port = envConfig.port
 

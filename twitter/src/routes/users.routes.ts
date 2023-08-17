@@ -37,38 +37,6 @@ import { filterMiddleware } from '~/middlewares/common.middlewares'
 import { UpdateMeReqBody } from '~/models/requests/User.request'
 const usersRouter = Router()
 
-/**
- * @swagger
- * /users/login:
- *   post:
- *     tags:
- *       - users
- *     summary: Login
- *     description: Login
- *     operationId: login
- *     requestBody:
- *       description: Input email and password to login
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/LoginBody'
- *     responses:
- *       '200':
- *         description: Login success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Login success
- *                 result:
- *                   $ref: '#/components/schemas/SuccessAuthentication'
- *       '422':
- *         description: Invalid input
- */
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 
 /**
