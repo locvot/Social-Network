@@ -40,7 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginBody'
+              $ref: 'components.yaml#/components/schemas/LoginBody'
         required: true
       responses:
         '200':
@@ -54,7 +54,7 @@ paths:
                     type: string
                     example: Login success
                   result:
-                    $ref: '#/components/schemas/SuccessAuthenication'
+                    $ref: 'components.yaml#/components/schemas/SuccessAuthenication'
         '422':
           description: Validation error
   /users/me:
@@ -78,4 +78,4 @@ paths:
                     type: string
                     example: Get me success
                   result:
-                    $ref: '#/components/schemas/User'
+                    $ref: 'components.yaml#/components/schemas/User'
