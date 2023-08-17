@@ -16,7 +16,23 @@ import './utils/s3'
 import { createServer } from 'http'
 import conversationsRouter from './routes/conversations.routes'
 import initSocket from './utils/socket'
+import swaggerUi from 'swagger-ui-express'
+import swaggerJSDoc from 'swagger-jsdoc'
 // import '~/utils/fake'
+
+const options: swaggerJSDoc.Options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Twitter API',
+      version: '1.0.0',
+      description: 'Twitter API with express'
+    }
+  },
+  apis: ['./openapi/*.yaml']
+}
+const openapiSpecification = swaggerJSDoc(options)
+
 config()
 
 // Connect to database
@@ -41,6 +57,7 @@ initFolder()
 app.use(express.json())
 
 // Define Routes
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/tweets', tweetsRouter)
