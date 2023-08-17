@@ -4,7 +4,6 @@ import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
-import { config } from 'dotenv'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRouter from './routes/static.routes'
 import tweetsRouter from './routes/tweets.routes'
@@ -18,6 +17,7 @@ import conversationsRouter from './routes/conversations.routes'
 import initSocket from './utils/socket'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc'
+import { envConfig } from './constants/config'
 // import '~/utils/fake'
 
 const options: swaggerJSDoc.Options = {
@@ -33,8 +33,6 @@ const options: swaggerJSDoc.Options = {
 }
 const openapiSpecification = swaggerJSDoc(options)
 
-config()
-
 // Connect to database
 databaseService.connect().then(() => {
   databaseService.indexUsers()
@@ -49,7 +47,7 @@ const httpServer = createServer(app)
 // Enable CORS
 app.use(cors())
 
-const port = process.env.PORT
+const port = envConfig.port
 
 // Initialize folder
 initFolder()
