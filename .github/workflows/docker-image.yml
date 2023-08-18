@@ -20,4 +20,8 @@ jobs:
     - name: 'Create env file'
       run: echo "${{ secrets.TWITTER_ENV_PRODUCTION }}" > .env.production
     - name: Build the Docker image
+<<<<<<<<< Temporary merge branch 1
+      run: docker build . --progress=plain -t loc/twitter:v1 .
+=========
       run: docker build --progress=plain -t loc/twitter:v1 .
+>>>>>>>>> Temporary merge branch 2
