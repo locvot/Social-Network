@@ -29,6 +29,8 @@ tags:
     description: API about users
   - name: tweets
     description: API about tweets
+  - name: media
+    description: API about media
 paths:
   /users/register:
     post:
@@ -544,4 +546,113 @@ paths:
                     example: Get tweet successfully
                   result:
                     $ref: 'components.yaml#/components/schemas/Tweet'
-    
+  /upload-image:
+    post:
+      tags:
+        - media
+      summary: Upload image
+      description: Upload image
+      operationId: uploadImage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Image
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload image successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload image successfully
+                  result:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        example: 'http://localhost:4000/images/avatars/johndoe.jpg'
+  /upload-video:
+    post:
+      tags:
+        - media
+      summary: Upload video
+      description: Upload video
+      operationId: uploadVideo
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Video
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                video:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload video successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload video successfully
+                  result:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        example: 'http://localhost:4000/videos/avatars/johndoe.mp4'
+  /video-status/{video-id}:
+    get:
+      tags:
+        - media
+      summary: Get video status
+      description: Get video status
+      operationId: getVideoStatus
+      parameters:
+        - name: video-id
+          in: path
+          description: Video id
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      responses:
+        default:
+          description: Get video status successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Get video status successfully
+                  result:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        example: 'processing'
+                      url:
+                        type: string
+                        example: 'http://localhost:4000/videos/avatars/johndoe.mp4'
