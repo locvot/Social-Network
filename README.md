@@ -1,4 +1,4 @@
-# Social Network Backend
+# Social Network
 
 This project implements the core backend functionalities of a **social network** inspired by Twitter. Built using modern web technologies, it provides RESTful APIs for key social features such as user authentication, tweet creation and retrieval, user interactions (following, commenting, liking), real-time chat, and media handling.
 
