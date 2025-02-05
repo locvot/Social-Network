@@ -46,3 +46,6 @@ This project implements the core backend functionalities of a **social network**
 
 This project uses **Swagger** (OpenAPI) to document and test the RESTful APIs. Swagger UI provides an interactive interface to explore and test API endpoints directly from the browser, making it easy to understand the routes and parameters.
 
+- You can also view the hosted Swagger UI here: **[Swagger Documentation](https://locvot.github.io/Social-Network/)**  
+
+
