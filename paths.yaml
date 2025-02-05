@@ -3,7 +3,7 @@ info:
   title: Social Network API
   description: |-
     This is the backend server of a Social Network, providing RESTful APIs for core functionalities.
-    The server includes user authentication, tweet creation, following/unfollowing, commenting, liking, and real-time chat using WebSockets.
+    The server includes user authentication, tweet creation, following/unfollowing, commenting, liking, video streaming and real-time chat using WebSockets.
     You can interact with the API to simulate a fully functional social networking platform.
 
     Some useful links:
