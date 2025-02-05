@@ -442,4 +442,106 @@ paths:
                   message:
                     type: string
                     example: Change password successfully
-                   
+  /tweets:
+    post:
+      tags:
+        - tweets
+      summary: Create tweet
+      description: Create tweet
+      operationId: createTweet
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Tweet content
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: 'This is my first tweet.'
+                  minLength: 1
+                  maxLength: 280
+              required:
+                - content
+      responses:
+        '200':
+          description: Create tweet successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Create tweet successfully
+                  result:
+                    $ref: 'components.yaml#/components/schemas/Tweet'
+    get:
+      tags:
+        - tweets
+      summary: Get tweets
+      description: Get tweets
+      operationId: getTweets
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: Limit number
+          required: false
+          schema:
+            type: integer
+            example: 10
+      responses:
+        default:
+          description: Get tweets successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Get tweets successfully
+                  result:
+                    type: array
+                    items:
+                      $ref: 'components.yaml#/components/schemas/Tweet'
+  /tweets/{tweet_id}:
+    get:
+      tags:
+        - tweets
+      summary: Get tweet
+      description: Get tweet
+      operationId: getTweet
+      parameters:
+        - name: tweet_id
+          in: path
+          description: Tweet id
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 65b8fa...df23
+      responses:
+        default:
+          description: Get tweet successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Get tweet successfully
+                  result:
+                    $ref: 'components.yaml#/components/schemas/Tweet'
+    

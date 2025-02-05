@@ -127,6 +127,56 @@ components:
       type: number
       enum: [Unverified, Verified, Banned]
       example: 1
+    Tweet:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: "65b8fa...df23"
+        user_id:
+          type: string
+          format: MongoId
+          example: "64be0ad2e43d2464394feedb"
+        content:
+          type: string
+          example: "This is my first tweet."
+        hashtags:
+          type: array
+          items:
+            type: string
+          example: ["#hello", "#mongodb"]
+        mentions:
+          type: array
+          items:
+            type: string
+          example: ["john_doe"]
+        medias:
+          type: array
+          items:
+            type: string
+          example: ["image1.jpg"]
+        parent_id:
+          type: string
+          format: MongoId
+          nullable: true
+          example: null
+        type:
+          type: string
+          enum: [tweet, reply, retweet, quote]
+          example: "tweet"
+        audience:
+          type: string
+          enum: [public, followers, private]
+          example: "public"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-02-05T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-02-05T12:00:00Z"
   securitySchemes:
     BearerAuth:
       type: http
