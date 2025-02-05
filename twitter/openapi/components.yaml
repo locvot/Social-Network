@@ -1,5 +1,14 @@
 components:
   schemas:
+    RegisterBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: test13@gmail.com
+        password: 
+          type: string
+          example: Test123!
     LoginBody:
       type: object
       properties:
@@ -73,6 +82,47 @@ components:
         cover_photo:
           type: string
           example: 'http:localhost:4000/images/avatars/johndoe.jpg'
+    UserPublic:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 64be0ad2e43d2464394feedb
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: johndoe@example.com
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2023-06-08T10:17:31.096Z
+        twitter_circle:
+          type: array
+          items:
+            type: string
+            format: MongoId
+          example: ['64be0ad2e43d2464394feedb', '64be0ad2e43d2464394feedc']
+        bio:
+          type: string
+          example: 'This is my bio.'
+        location:
+          type: string
+          example: 'San Francisco, CA'
+        website:
+          type: string
+          example: 'www.example.com'
+        username:
+          type: string
+          example: 'johndoe'
+        avatar:
+          type: string
+          example: 'http://localhost:4000/images/avatars/johndoe.jpg'
+        cover_photo:
+          type: string
+          example: 'http://localhost:4000/images/avatars/johndoe.jpg'
     UserVerifyStatus:
       type: number
       enum: [Unverified, Verified, Banned]

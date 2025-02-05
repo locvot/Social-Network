@@ -27,7 +27,36 @@ servers:
 tags:
   - name: users
     description: API about users
+  - name: tweets
+    description: API about tweets
 paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Register
+      description: Register to twitter
+      operationId: register
+      requestBody:
+        description: Email, password, name
+        content:
+          application/json:
+            schema:
+              $ref: 'components.yaml#/components/schemas/RegisterBody'
+        required: true
+      responses:
+        '200':
+          description: Register success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Register success
+                  result:
+                    $ref: 'components.yaml#/components/schemas/SuccessAuthenication'
   /users/login:
     post:
       tags:
@@ -55,8 +84,160 @@ paths:
                     example: Login success
                   result:
                     $ref: 'components.yaml#/components/schemas/SuccessAuthenication'
-        '422':
-          description: Validation error
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Logout
+      description: Logout to twitter
+      operationId: logout
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Refresh token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRhNGZiNmYxNmYxNmViZTBlYTFhZmVlIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTIxMDY1MzksImV4cCI6MTY5NDY5ODUzOX0.9Z_C51hbQ79FJgUIgeageUhbwWTlP5OQGENyH1EaTfY
+        required: true
+      responses:
+        '200':
+          description: Logout success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout success
+  /users/refresh-token:
+    post:
+      tags:
+        - users
+      summary: Refresh token
+      description: Refresh token
+      operationId: refreshToken
+      requestBody:
+        description: Refresh token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRhNGZiNmYxNmYxNmViZTBlYTFhZmVlIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTIxMDY1MzksImV4cCI6MTY5NDY5ODUzOX0.9Z_C51hbQ79FJgUIgeageUhbwWTlP5OQGENyH1EaTfY
+        required: true
+      responses:
+        '200':
+          description: Refresh token success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh token success
+                  result:
+                    $ref: 'components.yaml#/components/schemas/SuccessAuthenication'
+  /users/verify-email:
+    post:
+      tags:
+        - users
+      summary: Verify email
+      description: Verify email
+      operationId: verifyEmail
+      requestBody:
+        description: email_verify_token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRhNGZiNmYxNmYxNmViZTBlYTFhZmVlIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTIxMDY1MzksImV4cCI6MTY5NDY5ODUzOX0.9Z_C51hbQ79FJgUIgeageUhbwWTlP5OQGENyH1EaTfY
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email verified successfully
+  /users/forgot-password:
+    post:
+      tags:
+        - users
+      summary: Forgot password
+      description: Forgot password
+      operationId: forgotPassword
+      requestBody:
+        description: email
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test13@gmail.com
+        required: true
+      responses:
+        '200':
+          description: Check email to reset password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Check email to reset password
+  /users/reset-password:
+    post:
+      tags:
+        - users
+      summary: Reset password
+      description: Reset password
+      operationId: resetPassword
+      requestBody:
+        description: forgot_password_token, password, confirm_password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                forgot_password_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRhNGZiNmYxNmYxNmViZTBlYTFhZmVlIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTIxMDY1MzksImV4cCI6MTY5NDY5ODUzOX0.9Z_C51hbQ79FJgUIgeageUhbwWTlP5OQGENyH1EaTfY
+                password:
+                  type: string
+                  example: Test123!
+                confirm_password:
+                  type: string
+                  example: Test123!
+        required: true
+      responses:
+        '200':
+          description: Reset password successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Reset password successfully
   /users/me:
     get:
       tags:
@@ -79,3 +260,186 @@ paths:
                     example: Get me success
                   result:
                     $ref: 'components.yaml#/components/schemas/User'
+  /users/patch:
+    patch:
+      tags:
+        - users
+      summary: Update profile
+      description: Update profile user
+      operationId: updateMe
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Name, date_of_birth. bio, location, website, username, avatar, cover_photo
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                date_of_birth:
+                  type: string
+                  format: ISO8601
+                  example: 2023-06-08T10:17:31.096Z
+                bio:
+                  type: string
+                  example: 'This is my bio.'
+                location:
+                  type: string
+                  example: 'San Francisco, CA'
+                website:
+                  type: string
+                  example: 'www.example.com'
+                username:
+                  type: string
+                  example: 'johndoe'
+                avatar:
+                  type: string
+                  example: 'http:localhost:4000/images/avatars/johndoe.jpg'
+                cover_photo:
+                  type: string
+                  example: 'http:localhost:4000/images/avatars/johndoe.jpg'
+        required: true
+      responses:
+        '200':
+          description: Update profile successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Update profile successfully
+                  result:
+                    $ref: 'components.yaml#/components/schemas/User'
+  /users/{user_id}:
+    get:
+      tags:
+        - users
+      summary: Get user profile
+      description: Get user profile
+      operationId: getUser
+      parameters:
+        - name: user_id
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      responses:
+        default:
+          description: Get user profile successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Get user profile successfully
+                  result:
+                    $ref: 'components.yaml#/components/schemas/UserPublic'
+  /users/follow:
+    post:
+      tags:
+        - users
+      summary: Follow user
+      description: Follow user
+      operationId: followUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: User id
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  format: MongoId
+                  example: 64be0ad2e43d2464394feedb
+        required: true
+      responses:
+        '200':
+          description: Follow successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Follow successfully
+  /users/follow/{usersId}:
+    delete:
+      tags:
+        - users
+      summary: Unfollow user
+      description: Unfollow user
+      operationId: unfollowUser
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: usersId
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      responses:
+        '200':
+          description: Unfollow successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unfollow successfully
+  /users/change-password:
+    put:
+      tags:
+        - users
+      summary: Change password
+      description: Change password
+      operationId: changePassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: old_password, password, confirm_password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  example: Test123!
+                new_password:
+                  type: string
+                  example: Test1234!
+                confirm_password:
+                  type: string
+                  example: Test1234!
+        required: true
+      responses:
+        '200':
+          description: Change password successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Change password successfully
+                   
